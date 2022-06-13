@@ -9,10 +9,13 @@ public class GameController : MonoBehaviour
     public static bool GameIsPaused = false;
 
     public int hitPoints;
+    public GameObject initPosition;
+    public GameObject Player;
     public GameObject hudContainer, gameOverPanel;
     public GameObject OptionUI;
     public Text timeCounter, countdownText;
     public bool gamePlaying { get; private set;}
+    public bool isStart = false;
     static int countdownTime = 3;
     public GameObject finishObj;
 
@@ -46,9 +49,12 @@ public class GameController : MonoBehaviour
         gamePlaying = false;
         timeCounter.text = "00:00.00";
         s = new RankingSystem();
+        Application.runInBackground = true;
+        Time.timeScale = 0f;
     }
     public void ActiveMainMenu()
     {
+        isStart = false;
         MainMenuUI.SetActive(true);
         OptionUI.SetActive(false);
         RankUI.SetActive(false);
@@ -57,7 +63,6 @@ public class GameController : MonoBehaviour
     public void ActiveRankUI()
     {
     
-        MainMenuUI.SetActive(false);
         RankUI.SetActive(true);
 
         rankSetting();
@@ -91,7 +96,8 @@ public class GameController : MonoBehaviour
                 Text[] textArr = RankList[i].GetComponentsInChildren<Text>();
                 textArr[0].text = (i + 1).ToString();
                 textArr[1].text = dateArr[i];
-                textArr[2].text = timeArr[i] > 99999 ? "" : timeArr[i].ToString();
+                TimeSpan timespan = TimeSpan.FromSeconds(timeArr[i]);
+                textArr[2].text = timeArr[i] > 99999 ? "" : timespan.ToString("mm':'ss'.'ff");
             }
         }
     }
@@ -104,6 +110,7 @@ public class GameController : MonoBehaviour
     Coroutine countCor;
     public void StartGame()
     {
+        isStart = true;
         //스타트는 게임화면 넘어오자마자
         gamePlaying = false;
         Time.timeScale = 1f;
@@ -112,9 +119,13 @@ public class GameController : MonoBehaviour
         InGameUI.SetActive(true);
         timeCounter.text = "00:00.00";
         OptionUI.SetActive(false);
-       
-            
-       
+        Player.transform.position = initPosition.transform.position;
+
+        gameOverPanel.SetActive(false);
+        hudContainer.SetActive(true);
+        RankUI.SetActive(false);
+        
+
         if (countCor == null)
             countCor = StartCoroutine(CountdownToStart());
         else
@@ -129,7 +140,7 @@ public class GameController : MonoBehaviour
     private void Update()
     {
      
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && isStart)
         {
            Time.timeScale = 0;
             if (GameIsPaused)
@@ -142,6 +153,12 @@ public class GameController : MonoBehaviour
             }
                 //일단 나중에
         }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            RankingSystem rank = new RankingSystem();
+            rank.ResetRanking();
+        }
+        
 
         if (gamePlaying)
         {
@@ -184,13 +201,13 @@ public class GameController : MonoBehaviour
     public void EndGame()
     {
         gamePlaying = false;
+        isStart = false;
         FinishTimeTxt.text = timePlaying.ToString("mm':'ss'.'ff");
         Invoke("ShowFinishScreen", 1.25f);
         Invoke("ShowFinishRanking", 3.5f);
       
         s.SaveRanking((float)timePlaying.TotalSeconds);
-        
-
+        rankSetting();
     }
     private void ShowFinishScreen()
         {
@@ -202,7 +219,6 @@ public class GameController : MonoBehaviour
     private void ShowFinishRanking()
     {
         RankUI.SetActive(true);
-        RankLayoutUI.SetActive(true);
         RankPrefab.SetActive(true);
        
     }

@@ -18,16 +18,16 @@ public class MUSIC : MonoBehaviour
     }
 
 
-    private void Update()
-    {
-        SoundSlider();
+    //private void Update()
+    //{
+    //    SoundSlider();
             
-    }
-    public void SoundSlider()
-    {
-        audio.volume = backVolume.value;
+    //}
+    //public void SoundSlider()
+    //{
+    //    audio.volume = backVolume.value;
 
-        backVol = backVolume.value;
-        PlayerPrefs.SetFloat("backvol", backVol);
-    }
+    //    backVol = backVolume.value;
+    //    PlayerPrefs.SetFloat("backvol", backVol);
+    //}
 }
