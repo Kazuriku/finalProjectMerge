@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class monster2behave : MonoBehaviour
 {
-    public GameObject target;
     private Animator animator;
-    private Rigidbody2D rigid;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +30,7 @@ public class monster2behave : MonoBehaviour
     }
     void pushplayer()
     {
+        gameObject.GetComponent<PolygonCollider2D>().enabled = true;
         gameObject.tag = "Monster";
         animator.SetBool("attack", true);
         Invoke("attackEnd", 1);
@@ -39,6 +38,7 @@ public class monster2behave : MonoBehaviour
     void attackEnd()
     {
         animator.SetBool("encounter", false);
+        gameObject.GetComponent<PolygonCollider2D>().enabled = false;
         gameObject.tag = "Untagged";
     }
 }

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: firstObject_7
+  m_Name: firstGroundTile2_7
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: -6218726375331916302, guid: 1fae403a8ce523b419ce47087f243e6a, type: 3}
+  m_Sprite: {fileID: -5698927380282030480, guid: 87abd68ebd9297148abda9ca8dd5d03e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
