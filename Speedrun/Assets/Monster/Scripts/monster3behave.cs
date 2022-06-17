@@ -9,31 +9,34 @@ public class monster3behave : MonoBehaviour
     private int movePower = 7;
     private bool facingright = true;
     private Transform target;
-    private bool stopfollow;
+    private bool stopfollow = false;
     // Start is called before the first frame update
     void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
         target = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
-        Invoke("Think", 5);
+        Invoke("Think", 2);
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        followtarget();
         rigid.velocity = new Vector2(nextmove*movePower, rigid.velocity.y);
         //밑에 레이캐스팅해서 절벽확인
         Vector2 frontVec = new Vector2(rigid.position.x + nextmove*3, rigid.position.y);
         Debug.DrawRay(frontVec, Vector3.down, Color.green);
         RaycastHit2D rayHit = Physics2D.Raycast(frontVec, Vector3.down, 10, LayerMask.GetMask("Ground"));
-        if(rayHit.collider == null)
+        if (rayHit.collider == null)
         {
             stopfollow = true;
             if (followtarget())
             {
                 moveChange();
             }
+        }
+        else
+        {
+            stopfollow = false;
         }
         Vector2 rightVec = new Vector2(rigid.position.x + nextmove*3.5f, rigid.position.y);
         RaycastHit2D rightrayHit = Physics2D.Raycast(rightVec, Vector2.right, 3, LayerMask.GetMask("Ground"));
@@ -49,19 +52,20 @@ public class monster3behave : MonoBehaviour
         {
             moveChange();
         }
+        followtarget();
     }
     void moveChange()
     {
         nextmove *= -1;
         CancelInvoke();
-        Invoke("Think", 4);
+        Invoke("Think", 3);
         Flip();
     }
+
     void Think()
     {
-        stopfollow = false;
         nextmove = Random.Range(-1,2);
-        float thinkTime = Random.Range(2f, 5f);
+        float thinkTime = Random.Range(2f, 4f);
         if(nextmove < 0 && facingright == true)
         {
             Flip();
@@ -73,9 +77,9 @@ public class monster3behave : MonoBehaviour
     }
     bool followtarget()
     {
-        if (Vector2.Distance(transform.position, target.position) < 20 && transform.position.x-1 > target.position.x)
+        if (Vector2.Distance(transform.position, target.position) < 35 && transform.position.x-1 > target.position.x)
         {
-            if (!stopfollow)
+            if (stopfollow == false)
             {
                 CancelInvoke();
                 if (facingright == true)
@@ -88,9 +92,9 @@ public class monster3behave : MonoBehaviour
             else
                 return true;
         }
-        else if (Vector2.Distance(transform.position, target.position) < 20 && transform.position.x+1< target.position.x)
+        else if (Vector2.Distance(transform.position, target.position) < 35 && transform.position.x+1< target.position.x)
         {
-            if (!stopfollow)
+            if (stopfollow == false)
             {
                 CancelInvoke();
                 if (facingright == false)
