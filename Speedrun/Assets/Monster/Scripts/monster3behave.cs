@@ -25,7 +25,7 @@ public class monster3behave : MonoBehaviour
         //밑에 레이캐스팅해서 절벽확인
         Vector2 frontVec = new Vector2(rigid.position.x + nextmove*3, rigid.position.y);
         Debug.DrawRay(frontVec, Vector3.down, Color.green);
-        RaycastHit2D rayHit = Physics2D.Raycast(frontVec, Vector3.down, 10, LayerMask.GetMask("Ground"));
+        RaycastHit2D rayHit = Physics2D.Raycast(frontVec, Vector3.down, 8, LayerMask.GetMask("Ground"));
         if (rayHit.collider == null)
         {
             stopfollow = true;
@@ -33,6 +33,8 @@ public class monster3behave : MonoBehaviour
             {
                 moveChange();
             }
+            else
+                nextmove = 0;
         }
         else
         {
@@ -77,7 +79,7 @@ public class monster3behave : MonoBehaviour
     }
     bool followtarget()
     {
-        if (Vector2.Distance(transform.position, target.position) < 35 && transform.position.x-1 > target.position.x)
+        if (Vector2.Distance(transform.position, target.position) < 20 && transform.position.x-1 > target.position.x)
         {
             if (stopfollow == false)
             {
@@ -92,7 +94,7 @@ public class monster3behave : MonoBehaviour
             else
                 return true;
         }
-        else if (Vector2.Distance(transform.position, target.position) < 35 && transform.position.x+1< target.position.x)
+        else if (Vector2.Distance(transform.position, target.position) < 20 && transform.position.x+1< target.position.x)
         {
             if (stopfollow == false)
             {
